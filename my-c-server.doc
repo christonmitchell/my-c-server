@@ -1,0 +1,77 @@
+TCP server written in C. It listens for incoming connections on a specified port and accepts client requests. It's a basic example of socket programming that can be used to understand how a server communicates with clients over a network.
+
+What is this Server?
+This server is a program that:
+
+Opens a network socket: A "socket" is like a communication channel between your computer and other computers on the network.
+Listens for incoming connections: The server waits for clients to connect to it.
+Accepts connections: Once a client connects, the server can talk to the client (and later respond with data).
+Closes the connection: After communicating, the server can close the connection or keep it open for further communication.
+Code Walkthrough
+Here’s an easy-to-understand breakdown of the code:
+
+1. Includes and Variables
+You include necessary libraries and declare two variables:
+
+stdio.h: Standard input/output, used to print error messages or information.
+stdlib.h: Used for functions like exit() to stop the program if something goes wrong.
+sys/socket.h: Provides functions for socket programming (communication).
+netinet/in.h: Contains definitions for internet protocols.
+unistd.h: Used for the close() function to close the socket when done.
+The variables are:
+
+server_fd: This will store the server's socket file descriptor (a number that represents the socket).
+server_addr: A structure that holds information about the server, such as its IP address and port.
+2. Creating the Socket
+You create a socket for communication with the socket() function. Here, you specify:
+
+AF_INET for IPv4 (Internet protocol version 4).
+SOCK_STREAM for TCP (a reliable connection).
+0 for the default protocol (TCP).
+If something goes wrong during socket creation, the program will print an error message and stop.
+
+3. Setting Up the Server Address
+You configure the server's address using the server_addr structure:
+
+server_addr.sin_family = AF_INET: Specifies that the server will use IPv4.
+server_addr.sin_addr.s_addr = INADDR_ANY: Allows the server to accept connections from any network interface (i.e., any computer can connect).
+server_addr.sin_port = htons(PORT): Sets the port number (where the server will listen for connections).
+4. Binding the Socket
+You bind the socket to the specified address and port using the bind() function. This "binds" the server to a specific network address so it can accept incoming connections.
+
+5. Listening for Incoming Connections
+You use the listen() function to tell the server to start listening for incoming connections. The number 10 specifies that the server will allow up to 10 pending connections before refusing any new ones.
+
+6. Accepting a Connection
+Once a client attempts to connect, the server uses the accept() function to accept the connection. This function creates a new socket that can be used to communicate with the client. If the connection is successful, it returns a new socket descriptor (client_fd).
+
+7. Communicating with the Client
+You send a message to the client using the send() function. The message you send is a simple string: "Hello from the server!"
+
+8. Closing the Connection
+After the server finishes communicating with the client, it closes the client connection and then the server itself using the close() function.
+
+How to Use the Server
+Compile the Server:
+First, you need to turn the C code into an executable file. Open your terminal and use the following command:
+
+
+"gcc -o server server.c"
+This will create an executable file named server.
+
+Run the Server:
+After compiling, you can start the server by running the following command:
+
+
+"./server"
+This will start the server, and it will begin listening for connections on the specified port (default is 8080).
+
+Test the Server:
+Once the server is running, you can test it by connecting to it from another terminal using a tool called Netcat (nc). In another terminal window, run:
+
+
+"nc localhost 8080" (Netcat)
+This command simulates a client trying to connect to your server. Once connected, you should see the message: "Hello from the server!"
+
+Stop the Server:
+To stop the server, simply press Ctrl + C in the terminal window where the server is running. This will terminate the server and close the listening socket.
